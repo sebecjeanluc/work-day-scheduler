@@ -8,14 +8,14 @@ let localStorageRaw = [
 		date: today,
 		timeSlot: {
 			9: 'test9',
-			10: 'test',
-			11: 'test',
-			12: 'test',
-			13: 'test',
-			14: 'test',
-			15: 'test',
-			16: 'test',
-			17: 'test',
+			10: 'test10',
+			11: 'test11',
+			12: 'test12',
+			13: 'test13',
+			14: 'test14',
+			15: 'test15',
+			16: 'test16',
+			17: 'test17',
 		},
 	},
 ]
@@ -53,30 +53,31 @@ for (let key in timeSlotData) {
 }
 
 // set today's data to localstorage
-console.log(localStorageRaw)
+// console.log(localStorageRaw)
 let dateInfo = JSON.stringify(localStorageRaw)
 localStorage.setItem('dateInfo', dateInfo)
 
 // check if you can get the localstorage
 let localStorageDateInfo = localStorage.getItem('dateInfo')
 let localStorageData = JSON.parse(localStorageDateInfo)
-// console.log(localStorageData[0].date) //date
-// console.log(localStorageData[0].timeSlot[9]) // textarea
-for (i = 0; i < localStorageData.length; i++) {
-	let timeSlot = Object.values(localStorageData[i].timeSlot)
-	for (let j = 0; j < timeSlot.length; j++) {
-		console.log(timeSlot[j])
-	}
-}
-
-let textareaId = document.getElementById('timeSlot-9')
-localStorageData[0].timeSlot['9'] = textareaId.value
 
 let buttonElements = document.getElementsByClassName('saveBtn')
 
+// add eventListener to all buttons
 for (let i = 0; i < buttonElements.length; i++) {
 	buttonElements[i].addEventListener('click', function (event) {
-		console.log('clicked', textareaId.value)
+		for (i = 0; i < localStorageData.length; i++) {
+			let timeSlot = Object.values(localStorageData[i].timeSlot)
+			// get the textarea value when its clicked
+			console.log(timeSlot[i])
+			// which value is it looking?
+
+			for (let j = 0; j < timeSlot.length; j++) {
+				timeSlot[j] = $('#timeSlot-' + j).value
+				// console.log(timeSlot[j])
+			}
+			console.log('clicked', event)
+		}
 	})
 }
 
