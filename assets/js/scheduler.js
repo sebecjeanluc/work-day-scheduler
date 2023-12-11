@@ -3,11 +3,11 @@ const currentDayElement = $('#currentDay')
 
 today = dayjs().format('DD-MMM-YYYY')
 // check if the data is right format to store it into the data
-let localStorageData = [
+let localStorageRaw = [
 	{
 		date: today,
 		timeSlot: {
-			9: 'test',
+			9: 'test9',
 			10: 'test',
 			11: 'test',
 			12: 'test',
@@ -23,32 +23,20 @@ currentDayElement.text(today)
 
 // add the timetable blocks
 // get data from the array
-let timeSlotIndex = localStorageData[0].timeSlot
+let timeSlotIndex = localStorageRaw[0].timeSlot
 // add the data into the element
 // loop the array to create the entire block
 
 let timeSlotDataString = JSON.stringify(timeSlotIndex)
 let timeSlotData = JSON.parse(timeSlotDataString)
 
-console.log(timeSlotData)
-
 for (let key in timeSlotData) {
-	console.log(key)
-}
-let timeSlotKeys = Object.keys(timeSlotIndex)
-let timeSlotValus = Object.values(timeSlotIndex)
-
-console.log(JSON.parsetimeSlotIndex)
-// console.log(timeSlotValus)
-for (let i = 0; i < timeSlotIndex.length; i++) {
-	console.log(timeSlotIndex[i])
-}
-for (let i = 0; i < timeSlotKeys.length; i++) {
 	let divElement = $(`<div>`)
-	let hourElement = $('<div>').text(timeSlotKeys[i] + ':00')
+	let hourElement = $('<div>').text(key + ':00')
 	let textareaElement = $(
 		'<textarea class="row description col-sm-8"></textarea>'
-	).val(timeSlotKeys[i])
+	).val(timeSlotData[key])
+	textareaElement.attr('id', 'timeSlot-' + key)
 	let buttonElement = $(
 		'<button class="row saveBtn btn col-sm-2 d-flex align-items-center justify-content-center p-0">' +
 			'<i class="fas fa-save fa-solid"></i>' +
@@ -65,9 +53,37 @@ for (let i = 0; i < timeSlotKeys.length; i++) {
 }
 
 // set today's data to localstorage
-// localStorage.setItem('date', )
+console.log(localStorageRaw)
+let dateInfo = JSON.stringify(localStorageRaw)
+localStorage.setItem('dateInfo', dateInfo)
 
-// populating today's data from local storage for different date
+// check if you can get the localstorage
+let localStorageDateInfo = localStorage.getItem('dateInfo')
+let localStorageData = JSON.parse(localStorageDateInfo)
+// console.log(localStorageData[0].date) //date
+// console.log(localStorageData[0].timeSlot[9]) // textarea
+for (i = 0; i < localStorageData.length; i++) {
+	let timeSlot = Object.values(localStorageData[i].timeSlot)
+	for (let j = 0; j < timeSlot.length; j++) {
+		console.log(timeSlot[j])
+	}
+}
+
+let textareaId = document.getElementById('timeSlot-9')
+localStorageData[0].timeSlot['9'] = textareaId.value
+
+let buttonElements = document.getElementsByClassName('saveBtn')
+
+for (let i = 0; i < buttonElements.length; i++) {
+	buttonElements[i].addEventListener('click', function (event) {
+		console.log('clicked', textareaId.value)
+	})
+}
+
+// update the data
+localStorage.setItem('dateInfo', JSON.stringify(localStorageData))
+
+// producing today's data from local storage for different date
 // const todayDataIndex = localStorageData.findIndex(function (element) {
 // 	return element.date === today
 // })
