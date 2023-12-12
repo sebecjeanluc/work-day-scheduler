@@ -55,7 +55,7 @@ a variety of techniques in Javascript are used such as DOM Manipulation, Event H
 
 ### Preview
 
-![Preview](./assets/images/demo.png) will be added later
+![Preview](./assets/images/demo.png)
 
 #### This is the Github page
 
