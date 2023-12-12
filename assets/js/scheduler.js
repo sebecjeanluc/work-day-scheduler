@@ -46,7 +46,12 @@ let timeSlotData = JSON.parse(timeSlotDataString)
 // loop the array to create the entire block
 for (let key in timeSlotData) {
 	let divElement = $(`<div>`)
-	let hourElement = $('<div>').text(key + ':00')
+	divElement.addClass('time-block row')
+	divElement.attr('id', 'key-' + key)
+	let hourElement = $('<div>').text(key)
+	hourElement.addClass(
+		'row hour col-sm-2 d-flex align-items-center justify-content-center'
+	)
 	let textareaElement = $(
 		'<textarea class="row description col-sm-8"></textarea>'
 	).val(timeSlotData[key])
@@ -55,10 +60,6 @@ for (let key in timeSlotData) {
 		'<button class="row saveBtn btn col-sm-2 d-flex align-items-center justify-content-center p-0">' +
 			'<i class="fas fa-save fa-solid"></i>' +
 			'</button>'
-	)
-	divElement.addClass('time-block row')
-	hourElement.addClass(
-		'row hour col-sm-2 d-flex align-items-center justify-content-center'
 	)
 	containerElement.append(divElement)
 	divElement.append(hourElement)
@@ -86,32 +87,42 @@ for (let i = 0; i < buttonElements.length; i++) {
 		// Update the value for the specific time slot
 		storedData[0].timeSlot[hour] = textareaValue
 		localStorage.setItem('dateInfo', JSON.stringify(storedData))
+		displaySuccess()
+		setTimeout(hideSuccess, 2000)
 	})
 }
 
-// producing today's data from local storage for different date
-// const todayDataIndex = localStorageData.findIndex(function (element) {
-// 	return element.date === today
-// })
+function displaySuccess() {
+	document.getElementById('successAlert').classList.remove('d-none')
+}
 
-// if (todayDataIndex < 0) {
-// 	const todayData = localStorageData[todayDataIndex]
+function hideSuccess() {
+	document.getElementById('successAlert').classList.add('d-none')
+}
 
-// 	for (let i = 9; i < 18; i++) {
-// 		document.getElementById('time-block-' + i).value = todayData.data[i]
-// 	}
-// }
-
-// click btn to save the data to localstorage
-// click event listner
-// get the value of the textarea that correspond with btn that user click
-// if todayDataIndex exist
-// const todayData = localStorageData[todayDataIndex]
-// todayData.data[time] = value of the textarea
-// localStorageData[todayDataIndex] = todayData
-// localoStorage.setItem('data', localStorageData)
-// else const todayData = { date: "10-12-2023", data:{}
-// todayData.data[time] = value of the textarea
-// localStorageData[todayDataIndex] = todayData
-// localoStorage.setItem('data', localStorageData)
-//}
+// Get the current time
+let currentHour = dayjs().format('H')
+// for debug the time
+// currentHour = 17
+// console.log(currentHour)
+// Get the timeSlot value from all hour element
+let timeBlockElement = $('.time-block')
+for (let i = 0; i < timeBlockElement.length; i++) {
+	let block = timeBlockElement[i]
+	// split the id key for the usability
+	let idParts = timeBlockElement[i].id.split('-')
+	let timePart = idParts[1]
+	let period = timePart.slice(-2)
+	let hourString = timePart.slice(0, -2)
+	let blockHour = parseInt(hourString)
+	if (blockHour < currentHour) {
+		// if the current time is within the time block, add the present css
+		$(block).addClass('past').removeClass('present future')
+	} else if (blockHour === currentHour) {
+		// if its before, add past
+		$(block).addClass('present').removeClass('past future')
+	} else {
+		// then if its in the future, add the future calss
+		$(block).addClass('future').removeClass('past present')
+	}
+}
