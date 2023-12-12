@@ -1,20 +1,20 @@
 let containerElement = $('.container')
 const currentDayElement = $('#currentDay')
 
+// Format and display the current date
 today = dayjs().format('DD-MMM-YYYY')
-// Add the current time to display
 currentDayElement.text(today)
 
+// Initialize a variable to store schedule data
 let storedData
 
-// check if there is any localStorage data
-
+// Try to load existing schedule data from localStorage
 const localStorageStoredData = localStorage.getItem('dateInfo')
 if (localStorageStoredData !== null) {
 	storedData = JSON.parse(localStorageStoredData)
 	createTimeBlock()
 } else {
-	// check if the data is right format to store it into the data
+	// If no data in localStorage, initialize default schedule data
 	storedData = [
 		{
 			date: today,
@@ -31,20 +31,18 @@ if (localStorageStoredData !== null) {
 			},
 		},
 	]
-	// set today's data to localstorage if its empty
+	// Save the initialized schedule data to localStorage
 	let dateInfo = JSON.stringify(storedData)
 	localStorage.setItem('dateInfo', dateInfo)
 	createTimeBlock()
 }
 
+// Function to create time block elements
 function createTimeBlock() {
-	// Get the timeSlot key for looping
 	let timeSlotIndex = storedData[0].timeSlot
 
-	// add the timetable blocks
-	// add the data into the element
-	// loop the array to create the entire block
 	for (let key in timeSlotIndex) {
+		// Create time block elements
 		let divElement = $(`<div>`)
 		divElement.addClass('time-block m-0')
 		divElement.attr('id', 'key-' + key)
@@ -62,36 +60,52 @@ function createTimeBlock() {
 				'</button>'
 		)
 		containerElement.append(divElement)
-		divElement.append(hourElement)
-		divElement.append(textareaElement)
-		divElement.append(buttonElement)
+		divElement.append(hourElement, textareaElement, buttonElement)
 	}
+	addSaveButton()
 }
 
-let buttonElements = document.getElementsByClassName('saveBtn')
-
-// add eventListener to all buttons
-for (let i = 0; i < buttonElements.length; i++) {
-	buttonElements[i].addEventListener('click', function (event) {
-		// when the button is clicked, get the corresponding textareaId and value
-		let textareaDiv = event.target.closest('.time-block')
-		let textareaElement = textareaDiv.querySelector('textarea')
-		let textareaId = textareaElement.id
-		let textareaValue = textareaElement.value
-		// console.log(textareaId)
-		// console.log(textareaValue)
-
-		// store the value to the localStorage
-		// extract the hour from textareaID
-		let hour = textareaId.split('-')[1]
-		// console.log(hour)
-		// Update the value for the specific time slot
-		storedData[0].timeSlot[hour] = textareaValue
+function addSaveButton() {
+	$('.saveBtn').on('click', function (event) {
+		const textareaElement = $(event.target)
+			.closest('.time-block')
+			.find('textarea')
+		const hour = textareaElement.attr('id').split('-')[1]
+		const updatedText = textareaElement.val()
+		// Update schedule data and save to localStorage
+		storedData[0].timeSlot[hour] = updatedText
 		localStorage.setItem('dateInfo', JSON.stringify(storedData))
+
+		// Display success message
 		displaySuccess()
 		setTimeout(hideSuccess, 2000)
 	})
 }
+
+// let buttonElements = document.getElementsByClassName('saveBtn')
+
+// add eventListener to all buttons
+// for (let i = 0; i < buttonElements.length; i++) {
+// 	buttonElements[i].addEventListener('click', function (event) {
+// 		// when the button is clicked, get the corresponding textareaId and value
+// 		let textareaDiv = event.target.closest('.time-block')
+// 		let textareaElement = textareaDiv.querySelector('textarea')
+// 		let textareaId = textareaElement.id
+// 		let textareaValue = textareaElement.value
+// 		// console.log(textareaId)
+// 		// console.log(textareaValue)
+
+// 		// store the value to the localStorage
+// 		// extract the hour from textareaID
+// 		let hour = textareaId.split('-')[1]
+// 		// console.log(hour)
+// 		// Update the value for the specific time slot
+// 		storedData[0].timeSlot[hour] = textareaValue
+// 		localStorage.setItem('dateInfo', JSON.stringify(storedData))
+// 		displaySuccess()
+// 		setTimeout(hideSuccess, 2000)
+// 	})
+// }
 
 function displaySuccess() {
 	document.getElementById('successAlert').classList.remove('d-none')
@@ -101,29 +115,33 @@ function hideSuccess() {
 	document.getElementById('successAlert').classList.add('d-none')
 }
 
-// Get the current time
-let currentHour = dayjs().format('H')
-// for debug the time
-// currentHour = 15
-// console.log(currentHour)
-// Get the timeSlot value from all hour element
-let timeBlockElement = $('.time-block')
-for (let i = 0; i < timeBlockElement.length; i++) {
-	let block = timeBlockElement[i]
-	// split the id key for the usability
-	let idParts = timeBlockElement[i].id.split('-')
-	let timePart = idParts[1]
-	let hourString = timePart.slice(0, -2)
-	let blockHour = parseInt(hourString)
-	let textareaElement = $(block).find('textarea')
-	if (blockHour < currentHour) {
-		// if the current time is within the time block, add the present css
-		$(textareaElement).addClass('past').removeClass('present future')
-	} else if (blockHour === currentHour) {
-		// if its before, add past
-		$(textareaElement).addClass('present').removeClass('past future')
-	} else {
-		// then if its in the future, add the future calss
-		$(textareaElement).addClass('future').removeClass('past present')
+function updateBlockStyles() {
+	// Get the current time
+	let currentHour = dayjs().format('H')
+	// for debug the time
+	// currentHour = 16
+	// console.log(currentHour)
+	// Get the timeSlot value from all hour element
+	let timeBlockElement = $('.time-block')
+	for (let i = 0; i < timeBlockElement.length; i++) {
+		let block = timeBlockElement[i]
+		// split the id key for the usability
+		let idParts = timeBlockElement[i].id.split('-')
+		let timePart = idParts[1]
+		let hourString = timePart.slice(0, -2)
+		let blockHour = parseInt(hourString)
+		let textareaElement = $(block).find('textarea')
+		if (blockHour < currentHour) {
+			// if the current time is within the time block, add the present css
+			$(textareaElement).addClass('past').removeClass('present future')
+		} else if (blockHour === currentHour) {
+			// if its before, add past
+			$(textareaElement).addClass('present').removeClass('past future')
+		} else {
+			// then if its in the future, add the future calss
+			$(textareaElement).addClass('future').removeClass('past present')
+		}
 	}
 }
+
+updateBlockStyles()
