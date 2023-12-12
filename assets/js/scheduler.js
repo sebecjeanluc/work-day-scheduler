@@ -2,34 +2,48 @@ let containerElement = $('.container')
 const currentDayElement = $('#currentDay')
 
 today = dayjs().format('DD-MMM-YYYY')
-// check if the data is right format to store it into the data
-let localStorageRaw = [
-	{
-		date: today,
-		timeSlot: {
-			9: 'test9',
-			10: 'test10',
-			11: 'test11',
-			12: 'test12',
-			13: 'test13',
-			14: 'test14',
-			15: 'test15',
-			16: 'test16',
-			17: 'test17',
+
+// check if there is any localStorage data
+
+const localStorageStoredData = localStorage.getItem('dateInfo')
+if (localStorageStoredData !== null) {
+	let storedData = JSON.parse(localStorageStoredData)
+} else {
+	// check if the data is right format to store it into the data
+	let localStorageRaw = [
+		{
+			date: today,
+			timeSlot: {
+				'9AM': 'Please add your schedule',
+				'10AM': 'Please add your schedule',
+				'11AM': 'Please add your schedule',
+				'12PM': 'Please add your schedule',
+				'13PM': 'Please add your schedule',
+				'14PM': 'Please add your schedule',
+				'15PM': 'Please add your schedule',
+				'16PM': 'Please add your schedule',
+				'17PM': 'Please add your schedule',
+			},
 		},
-	},
-]
+	]
+	// set today's data to localstorage if its empty
+	let dateInfo = JSON.stringify(localStorageRaw)
+	localStorage.setItem('dateInfo', dateInfo)
+	console.log('dateInfo is used')
+}
+// Add the current time to display
 currentDayElement.text(today)
 
-// add the timetable blocks
-// get data from the array
-let timeSlotIndex = localStorageRaw[0].timeSlot
-// add the data into the element
-// loop the array to create the entire block
+let storedData = JSON.parse(localStorageStoredData)
 
+// Get the timeSlot key for looping
+let timeSlotIndex = storedData[0].timeSlot
 let timeSlotDataString = JSON.stringify(timeSlotIndex)
 let timeSlotData = JSON.parse(timeSlotDataString)
 
+// add the timetable blocks
+// add the data into the element
+// loop the array to create the entire block
 for (let key in timeSlotData) {
 	let divElement = $(`<div>`)
 	let hourElement = $('<div>').text(key + ':00')
@@ -52,37 +66,28 @@ for (let key in timeSlotData) {
 	divElement.append(buttonElement)
 }
 
-// set today's data to localstorage
-// console.log(localStorageRaw)
-let dateInfo = JSON.stringify(localStorageRaw)
-localStorage.setItem('dateInfo', dateInfo)
-
-// check if you can get the localstorage
-let localStorageDateInfo = localStorage.getItem('dateInfo')
-let localStorageData = JSON.parse(localStorageDateInfo)
-
 let buttonElements = document.getElementsByClassName('saveBtn')
 
 // add eventListener to all buttons
 for (let i = 0; i < buttonElements.length; i++) {
 	buttonElements[i].addEventListener('click', function (event) {
-		for (i = 0; i < localStorageData.length; i++) {
-			let timeSlot = Object.values(localStorageData[i].timeSlot)
-			// get the textarea value when its clicked
-			console.log(timeSlot[i])
-			// which value is it looking?
+		// when the button is clicked, get the corresponding textareaId and value
+		let textareaDiv = event.target.closest('.time-block')
+		let textareaElement = textareaDiv.querySelector('textarea')
+		let textareaId = textareaElement.id
+		let textareaValue = textareaElement.value
+		// console.log(textareaId)
+		// console.log(textareaValue)
 
-			for (let j = 0; j < timeSlot.length; j++) {
-				timeSlot[j] = $('#timeSlot-' + j).value
-				// console.log(timeSlot[j])
-			}
-			console.log('clicked', event)
-		}
+		// store the value to the localStorage
+		// extract the hour from textareaID
+		let hour = textareaId.split('-')[1]
+		// console.log(hour)
+		// Update the value for the specific time slot
+		storedData[0].timeSlot[hour] = textareaValue
+		localStorage.setItem('dateInfo', JSON.stringify(storedData))
 	})
 }
-
-// update the data
-localStorage.setItem('dateInfo', JSON.stringify(localStorageData))
 
 // producing today's data from local storage for different date
 // const todayDataIndex = localStorageData.findIndex(function (element) {
