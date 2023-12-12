@@ -43,8 +43,8 @@ They will be added as the pesudocode is made
 - [x] Persist events between refreshes of a page
 - [x] These roadmap result will look like thepicture below
 - [x] Initialize the data
-- [] Refactor the codes' logic and variable names.
-- [] Deploy the application to github
+- [x] Refactor the codes' logic and variable names.
+- [x] Deploy the application to github
 
 The following mock-up animation demonstrates the application functionality:
 ![A user clicks on slots on the color-coded calendar and edits the events.](./assets/images/05-third-party-apis-homework-demo.gif)
@@ -55,7 +55,7 @@ a variety of techniques in Javascript are used such as DOM Manipulation, Event H
 
 ### Preview
 
-![Preview](./assets/images/) will be added later
+![Preview](./assets/images/demo.png) will be added later
 
 #### This is the Github page
 
