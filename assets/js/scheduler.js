@@ -104,7 +104,7 @@ function hideSuccess() {
 // Get the current time
 let currentHour = dayjs().format('H')
 // for debug the time
-currentHour = 15
+// currentHour = 15
 // console.log(currentHour)
 // Get the timeSlot value from all hour element
 let timeBlockElement = $('.time-block')
