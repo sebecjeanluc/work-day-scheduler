@@ -42,7 +42,7 @@ They will be added as the pesudocode is made
 - [x] Save the event in local storage when the save button is clicked in that timeblock.
 - [x] Persist events between refreshes of a page
 - [x] These roadmap result will look like thepicture below
-- [] Initialize the data
+- [x] Initialize the data
 - [] Refactor the codes' logic and variable names.
 - [] Deploy the application to github
 
