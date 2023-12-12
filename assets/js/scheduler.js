@@ -46,7 +46,7 @@ let timeSlotData = JSON.parse(timeSlotDataString)
 // loop the array to create the entire block
 for (let key in timeSlotData) {
 	let divElement = $(`<div>`)
-	divElement.addClass('time-block row')
+	divElement.addClass('time-block m-0')
 	divElement.attr('id', 'key-' + key)
 	let hourElement = $('<div>').text(key)
 	hourElement.addClass(
@@ -103,7 +103,7 @@ function hideSuccess() {
 // Get the current time
 let currentHour = dayjs().format('H')
 // for debug the time
-// currentHour = 17
+currentHour = 15
 // console.log(currentHour)
 // Get the timeSlot value from all hour element
 let timeBlockElement = $('.time-block')
@@ -112,17 +112,17 @@ for (let i = 0; i < timeBlockElement.length; i++) {
 	// split the id key for the usability
 	let idParts = timeBlockElement[i].id.split('-')
 	let timePart = idParts[1]
-	let period = timePart.slice(-2)
 	let hourString = timePart.slice(0, -2)
 	let blockHour = parseInt(hourString)
+	let textareaElement = $(block).find('textarea')
 	if (blockHour < currentHour) {
 		// if the current time is within the time block, add the present css
-		$(block).addClass('past').removeClass('present future')
+		$(textareaElement).addClass('past').removeClass('present future')
 	} else if (blockHour === currentHour) {
 		// if its before, add past
-		$(block).addClass('present').removeClass('past future')
+		$(textareaElement).addClass('present').removeClass('past future')
 	} else {
 		// then if its in the future, add the future calss
-		$(block).addClass('future').removeClass('past present')
+		$(textareaElement).addClass('future').removeClass('past present')
 	}
 }
