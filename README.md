@@ -35,13 +35,16 @@ Create a code quiz that contains the following requirements:
 
 They will be added as the pesudocode is made
 
-- [] Display the current day at the top of the calender when a user opens the planner.
-- [] Present timeblocks for standard business hours when the user scrolls down.
-- [] Color-code each timeblock based on past, present, and future when the timeblock is viewed.
-- [] Allow a user to enter an event when they click a timeblock
-- [] Save the event in local storage when the save button is clicked in that timeblock.
-- [] Persist events between refreshes of a page
-- [] These roadmap result will look like thepicture below
+- [x] Display the current day at the top of the calender when a user opens the planner.
+- [x] Present timeblocks for standard business hours when the user scrolls down.
+- [x] Color-code each timeblock based on past, present, and future when the timeblock is viewed.
+- [x] Allow a user to enter an event when they click a timeblock
+- [x] Save the event in local storage when the save button is clicked in that timeblock.
+- [x] Persist events between refreshes of a page
+- [x] These roadmap result will look like thepicture below
+- [x] Initialize the data
+- [] Refactor the codes' logic and variable names.
+- [] Deploy the application to github
 
 The following mock-up animation demonstrates the application functionality:
 ![A user clicks on slots on the color-coded calendar and edits the events.](./assets/images/05-third-party-apis-homework-demo.gif)

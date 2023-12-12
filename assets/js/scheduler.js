@@ -2,15 +2,20 @@ let containerElement = $('.container')
 const currentDayElement = $('#currentDay')
 
 today = dayjs().format('DD-MMM-YYYY')
+// Add the current time to display
+currentDayElement.text(today)
+
+let storedData
 
 // check if there is any localStorage data
 
 const localStorageStoredData = localStorage.getItem('dateInfo')
 if (localStorageStoredData !== null) {
-	let storedData = JSON.parse(localStorageStoredData)
+	storedData = JSON.parse(localStorageStoredData)
+	createTimeBlock()
 } else {
 	// check if the data is right format to store it into the data
-	let localStorageRaw = [
+	storedData = [
 		{
 			date: today,
 			timeSlot: {
@@ -27,44 +32,40 @@ if (localStorageStoredData !== null) {
 		},
 	]
 	// set today's data to localstorage if its empty
-	let dateInfo = JSON.stringify(localStorageRaw)
+	let dateInfo = JSON.stringify(storedData)
 	localStorage.setItem('dateInfo', dateInfo)
-	console.log('dateInfo is used')
+	createTimeBlock()
 }
-// Add the current time to display
-currentDayElement.text(today)
 
-let storedData = JSON.parse(localStorageStoredData)
+function createTimeBlock() {
+	// Get the timeSlot key for looping
+	let timeSlotIndex = storedData[0].timeSlot
 
-// Get the timeSlot key for looping
-let timeSlotIndex = storedData[0].timeSlot
-let timeSlotDataString = JSON.stringify(timeSlotIndex)
-let timeSlotData = JSON.parse(timeSlotDataString)
-
-// add the timetable blocks
-// add the data into the element
-// loop the array to create the entire block
-for (let key in timeSlotData) {
-	let divElement = $(`<div>`)
-	divElement.addClass('time-block m-0')
-	divElement.attr('id', 'key-' + key)
-	let hourElement = $('<div>').text(key)
-	hourElement.addClass(
-		'row hour col-sm-2 d-flex align-items-center justify-content-center'
-	)
-	let textareaElement = $(
-		'<textarea class="row description col-sm-8"></textarea>'
-	).val(timeSlotData[key])
-	textareaElement.attr('id', 'timeSlot-' + key)
-	let buttonElement = $(
-		'<button class="row saveBtn btn col-sm-2 d-flex align-items-center justify-content-center p-0">' +
-			'<i class="fas fa-save fa-solid"></i>' +
-			'</button>'
-	)
-	containerElement.append(divElement)
-	divElement.append(hourElement)
-	divElement.append(textareaElement)
-	divElement.append(buttonElement)
+	// add the timetable blocks
+	// add the data into the element
+	// loop the array to create the entire block
+	for (let key in timeSlotIndex) {
+		let divElement = $(`<div>`)
+		divElement.addClass('time-block m-0')
+		divElement.attr('id', 'key-' + key)
+		let hourElement = $('<div>').text(key)
+		hourElement.addClass(
+			'row hour col-sm-2 d-flex align-items-center justify-content-center'
+		)
+		let textareaElement = $(
+			'<textarea class="row description col-sm-8"></textarea>'
+		).val(timeSlotIndex[key])
+		textareaElement.attr('id', 'timeSlot-' + key)
+		let buttonElement = $(
+			'<button class="row saveBtn btn col-sm-2 d-flex align-items-center justify-content-center p-0">' +
+				'<i class="fas fa-save fa-solid"></i>' +
+				'</button>'
+		)
+		containerElement.append(divElement)
+		divElement.append(hourElement)
+		divElement.append(textareaElement)
+		divElement.append(buttonElement)
+	}
 }
 
 let buttonElements = document.getElementsByClassName('saveBtn')
